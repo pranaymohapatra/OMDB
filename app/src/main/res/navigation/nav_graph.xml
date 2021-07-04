@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/pointsTableFragment">
+
+    <fragment
+        android:id="@+id/pointsTableFragment"
+        android:name="com.starwars.starwarstournament.presentation.view.PointsTableFragment"
+        android:label="PointsTableFragment"
+        tools:layout="@layout/fragmment_main">
+        <action
+            android:id="@+id/action_pointsTableFragment_to_matchesDetailsFragment"
+            app:destination="@id/matchesDetailsFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/matchesDetailsFragment"
+        android:name="com.starwars.starwarstournament.presentation.view.MatchesDetailsFragment"
+        android:label="MatchesDetailsFragment"
+        tools:layout="@layout/fragmment_main">
+        <argument
+            android:name="playerId"
+            app:argType="integer" />
+    </fragment>
+</navigation>
