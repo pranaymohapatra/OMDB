@@ -13,7 +13,7 @@ sealed class FavoriteMovieOperation(
     object GetAllFavorites :
         FavoriteMovieOperation(
             OperationType.SELECTALL,
-            SearchItem("", "", "", "", "")
+            SearchItem("", "", "", "")
         )
 }
 
