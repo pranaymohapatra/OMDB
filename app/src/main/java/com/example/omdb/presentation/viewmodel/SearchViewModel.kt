@@ -7,7 +7,13 @@ import androidx.paging.PageKeyedDataSource
 import androidx.paging.PagedList
 import com.example.omdb.common.SearchItem
 import com.example.omdb.domain.usecase.SearchMoviesUseCase
+import com.example.omdb.helpers.GlobalState
+import com.example.omdb.helpers.State
 import com.example.omdb.presentation.viewmodel.paging.SearchSourceFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
@@ -17,11 +23,17 @@ class SearchViewModel @Inject constructor(
     private val dataSourceFactory = SearchSourceFactory(this)
     private val pagedListBuilder: LivePagedListBuilder<Int, SearchItem>
     private var query = ""
-
+    private lateinit var searchJob: Job
     val noItemsData: LiveData<String>
         get() = _noItemsData
     private val _noItemsData: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
+    }
+
+    val searchLoader: LiveData<Boolean>
+        get() = _searchLoader
+    private val _searchLoader: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
     }
 
     init {
@@ -39,8 +51,25 @@ class SearchViewModel @Inject constructor(
         })
     }
 
-    fun searchMovie() {
-        pagedSearchList = pagedListBuilder.build()
+    fun searchMovie(searchQuery: String) {
+        cancelJobIfActive()
+        _searchLoader.value = false
+        if (query == searchQuery) {
+            query = ""
+            return
+        } else {
+            searchJob = executeJob {
+                withContext(Dispatchers.IO) {
+                    delay(500) //Debounce Timeout
+                    _searchLoader.postValue(true)
+                }
+                if (!this@SearchViewModel::pagedSearchList.isInitialized)
+                    pagedSearchList = pagedListBuilder.build()
+                else
+                    retryLoad()
+            }
+
+        }
     }
 
     fun loadInitial(callback: PageKeyedDataSource.LoadInitialCallback<Int, SearchItem>) {
@@ -63,7 +92,16 @@ class SearchViewModel @Inject constructor(
     }
 
     fun retryLoad() {
+        pagedSearchList.value?.clear()
         dataSourceFactory.refresh()
+    }
+
+
+    private fun cancelJobIfActive() {
+        if (this::searchJob.isInitialized && searchJob.isActive) {
+            _globalStateData.value = GlobalState(State.SUCCESS, "")
+            searchJob.cancel()
+        }
     }
 
 }

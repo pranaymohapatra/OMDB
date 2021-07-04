@@ -11,11 +11,11 @@ import kotlinx.coroutines.Job
 open class BaseViewModel : ViewModel() {
     val globalStateData: LiveData<GlobalState>
         get() = _globalStateData
-    private val _globalStateData: MutableLiveData<GlobalState> by lazy {
+    protected val _globalStateData: MutableLiveData<GlobalState> by lazy {
         MutableLiveData<GlobalState>()
     }
 
-    private fun executeJob(func: suspend CoroutineScope.() -> Unit): Job {
+    protected fun executeJob(func: suspend CoroutineScope.() -> Unit): Job {
         return viewModelScope.launchOrError(func, ::handleError)
     }
 
