@@ -92,7 +92,6 @@ class SearchViewModel @Inject constructor(
     }
 
     fun retryLoad() {
-        pagedSearchList.value?.clear()
         dataSourceFactory.refresh()
     }
 
