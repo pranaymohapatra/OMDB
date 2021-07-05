@@ -18,4 +18,8 @@ class FavoriteMovieLiveDataRepository @Inject constructor(private val favoriteMo
             favoriteMovieDAO.getFavouritesLiveData()
         }
     }
+
+    override fun clear() {
+
+    }
 }

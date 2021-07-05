@@ -1,5 +1,6 @@
 package com.example.omdb.domain.usecase
 
+import com.example.omdb.common.FavoriteMovieList
 import com.example.omdb.common.FavoriteMovieOperation
 import com.example.omdb.common.SearchItem
 import com.example.omdb.common.SearchQuery
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 class SearchMoviesUseCase @Inject constructor(
     private val searchRepository: Repository<SearchDomainDTO, SearchQuery>,
-    private val favoriteMovieRepository: Repository<List<FavoriteMovie>, FavoriteMovieOperation>
+    private val favoriteMovieRepository: Repository<FavoriteMovieList, FavoriteMovieOperation>
 ) {
     private val favMap: MutableMap<String, Boolean> by lazy {
         mutableMapOf()

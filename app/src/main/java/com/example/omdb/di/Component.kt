@@ -11,7 +11,8 @@ import javax.inject.Singleton
     modules = [HttpModule::class,
         ViewModelModule::class,
         MainAppModule::class,
-        RepositoryModule::class]
+        RepositoryModule::class,
+        RoomModule::class]
 )
 @Singleton
 interface Component {
